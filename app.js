@@ -276,17 +276,23 @@ function shuffle(arr) {
   return a;
 }
 
-// Palabra personalizada si está activada; si no, categoría al azar entre las
-// marcadas y después palabra al azar dentro de esa categoría.
+// Palabra personalizada si está activada; si no, una palabra al azar entre todas
+// las de las categorías marcadas. Así cada categoría sale en proporción a
+// cuántas palabras tiene (una categoría chica sale poco si hay otras marcadas).
 function chooseWord() {
   if (state.customEnabled) {
     const word = state.customWord.trim().replace(/\s+/g, ' ');
     return word ? { word, category: null } : null;
   }
   const pool = CATEGORIES.filter((c) => state.categories.includes(c.id));
-  if (!pool.length) return null;
-  const category = pickRandom(pool);
-  return { word: pickRandom(category.words), category: category.name };
+  const total = pool.reduce((sum, c) => sum + c.words.length, 0);
+  if (!total) return null;
+  let r = randomInt(total);
+  for (const c of pool) {
+    if (r < c.words.length) return { word: c.words[r], category: c.name };
+    r -= c.words.length;
+  }
+  return null;
 }
 
 // La ronda vive solo en memoria: la palabra y los impostores no se guardan.
