@@ -249,3 +249,14 @@ html, body {
   display: flex; justify-content: space-between; gap: 12px;
   background: var(--surface); border-radius: 10px; padding: 10px 14px;
 }
+
+/* ---------- Temporizador de votación en grupo ---------- */
+.timer {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  background: var(--surface); border-radius: var(--radius); padding: 12px 16px; margin-bottom: 8px;
+}
+.timer-text { font-size: 2.6rem; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.timer small { color: var(--muted); font-size: .8rem; text-align: center; }
+.timer.is-low .timer-text { color: var(--accent); animation: timer-pulse 1s ease-in-out infinite; }
+@keyframes timer-pulse { 50% { opacity: .55; } }
+@media (prefers-reduced-motion: reduce) { .timer.is-low .timer-text { animation: none; } }

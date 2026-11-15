@@ -136,6 +136,18 @@ function renderConfig() {
   $('#imp-plus').disabled = state.impostors >= max;
   $('#imp-hint').textContent = `Con ${n} jugadores podés tener hasta ${max} impostor${max === 1 ? '' : 'es'}.`;
   document.querySelectorAll('input[name="vote-mode"]').forEach((r) => { r.checked = r.value === state.voteMode; });
+  $('#group-mode-hint').textContent =
+    `Discuten y eligen juntos. Tienen ${formatTime(groupVoteSeconds(n) * 1000)} en total para votar en toda la partida.`;
+}
+
+// Tiempo total de votación en grupo: 2 minutos + 30 segundos por cada jugador después del cuarto.
+function groupVoteSeconds(n) {
+  return 120 + 30 * Math.max(0, n - 4);
+}
+
+function formatTime(ms) {
+  const total = Math.max(0, Math.ceil(ms / 1000));
+  return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, '0')}`;
 }
 
 document.querySelectorAll('input[name="vote-mode"]').forEach((r) => r.addEventListener('change', () => {
@@ -297,6 +309,8 @@ function startRound() {
     index: 0, // jugador que está viendo su rol
     starterId: pickRandom(state.players).id, // quien empieza cada vuelta de pistas
     lap: 0, // número de vuelta de pistas
+    // Tiempo de votación en grupo que queda; se descuenta entre votaciones.
+    voteTimeLeft: groupVoteSeconds(state.players.length) * 1000,
   };
   renderHandoff();
   show('screen-reveal');
@@ -421,6 +435,7 @@ $('#to-vote').addEventListener('click', () => {
 });
 
 function newRound() {
+  stopVoteTimer();
   round = null;
   if (state.customEnabled) {
     // Con palabra personalizada, el árbitro tiene que escribir una nueva.
@@ -436,11 +451,13 @@ function newRound() {
 
 document.querySelectorAll('.js-new-round').forEach((b) => b.addEventListener('click', newRound));
 document.querySelectorAll('.js-home').forEach((b) => b.addEventListener('click', () => {
+  stopVoteTimer();
   round = null;
   show('screen-players');
 }));
 document.querySelectorAll('.js-end-game').forEach((b) => b.addEventListener('click', () => {
   if (!confirm('¿Terminar la partida y ver quiénes eran los impostores?')) return;
+  stopVoteTimer();
   renderEnd(null);
   show('screen-end');
 }));
@@ -484,7 +501,48 @@ function startGroupVote() {
   eject.disabled = true;
   eject.textContent = 'Elegí a alguien';
   show('screen-vote');
+  startVoteTimer();
 }
+
+// ---------- temporizador de la votación en grupo ----------
+// Se calcula contra una hora límite, así sigue siendo exacto aunque la
+// pantalla se bloquee o el navegador frene el intervalo.
+let voteDeadline = 0;
+let voteTicker = null;
+
+function renderTimer(ms) {
+  $('#timer-text').textContent = formatTime(ms);
+  $('#vote-timer').classList.toggle('is-low', ms <= 30000);
+}
+
+function startVoteTimer() {
+  stopVoteTimer();
+  voteDeadline = Date.now() + round.voteTimeLeft;
+  renderTimer(round.voteTimeLeft);
+  voteTicker = setInterval(tickVoteTimer, 250);
+}
+
+function tickVoteTimer() {
+  if (!voteTicker) return;
+  const left = voteDeadline - Date.now();
+  renderTimer(left);
+  if (left > 0) return;
+  stopVoteTimer();
+  round.voteTimeLeft = 0;
+  if (navigator.vibrate) navigator.vibrate([300, 100, 300]);
+  renderEnd('impostores', 'tiempo');
+  show('screen-end');
+}
+
+// Detiene el reloj y guarda el tiempo que quedó para la próxima votación.
+function stopVoteTimer() {
+  if (!voteTicker) return;
+  clearInterval(voteTicker);
+  voteTicker = null;
+  if (round) round.voteTimeLeft = Math.max(0, voteDeadline - Date.now());
+}
+
+document.addEventListener('visibilitychange', () => { if (voteTicker && !document.hidden) tickVoteTimer(); });
 
 $('#vote-list').addEventListener('click', (e) => {
   const p = pickFromGrid($('#vote-list'), e);
@@ -496,7 +554,8 @@ $('#vote-list').addEventListener('click', (e) => {
 });
 
 $('#eject-btn').addEventListener('click', () => {
-  if (!groupChoice) return;
+  if (!groupChoice || !voteTicker) return;
+  stopVoteTimer();
   round.eliminated.add(groupChoice.id);
   renderVerdict({ expelled: groupChoice });
   show('screen-result');
@@ -646,7 +705,7 @@ function renderVerdict({ expelled, tie, counts }) {
 }
 
 // ---------- pantalla 8: fin ----------
-function renderEnd(result) {
+function renderEnd(result, reason) {
   const imps = round.players.filter(isImpostor);
   const allFemale = imps.every((p) => p.gender === 'f');
   const one = imps.length === 1;
@@ -659,7 +718,9 @@ function renderEnd(result) {
     $('#end-sub').textContent = `Descubrieron a ${impLabel}.`;
   } else if (result === 'impostores') {
     $('#end-title').textContent = one ? `¡Ganó ${impLabel}!` : `¡Ganaron ${impLabel}!`;
-    $('#end-sub').textContent = 'No lograron descubrir a tiempo.';
+    $('#end-sub').textContent = reason === 'tiempo'
+      ? 'Se terminó el tiempo de votación.'
+      : 'No lograron descubrir a tiempo.';
   } else {
     $('#end-title').textContent = 'Partida terminada';
     $('#end-sub').textContent = 'Sin ganador.';

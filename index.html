@@ -83,7 +83,7 @@
         <div class="vote-mode" role="radiogroup" aria-label="Tipo de votación">
           <label class="mode-opt">
             <input type="radio" name="vote-mode" value="group">
-            <span class="mode-text"><strong>En grupo</strong><small>Discuten y eligen juntos a quién expulsar.</small></span>
+            <span class="mode-text"><strong>En grupo</strong><small id="group-mode-hint">Discuten y eligen juntos a quién expulsar.</small></span>
             <span class="check" aria-hidden="true"></span>
           </label>
           <label class="mode-opt">
@@ -196,6 +196,11 @@
         <h1>Votación</h1>
         <p class="sub" id="vote-sub"></p>
       </header>
+
+      <div class="timer" id="vote-timer" role="timer">
+        <span class="timer-text" id="timer-text">0:00</span>
+        <small>Tiempo de votación. Si llega a cero, ganan los impostores.</small>
+      </div>
 
       <p class="hint">Discutan y elijan entre todos a quién expulsar.</p>
       <div id="vote-list" class="vote-grid" role="radiogroup" aria-label="Jugadores"></div>
