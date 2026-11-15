@@ -430,6 +430,7 @@ function renderClue() {
 $('#clue-next').addEventListener('click', () => { round.turn++; renderClue(); });
 $('#skip-vote').addEventListener('click', startLap);
 $('#to-vote').addEventListener('click', () => {
+  unlockAudio(); // los celulares solo permiten sonido después de un toque
   if (state.voteMode === 'secret') startSecretVote();
   else startGroupVote();
 });
@@ -530,6 +531,7 @@ function tickVoteTimer() {
   stopVoteTimer();
   round.voteTimeLeft = 0;
   if (navigator.vibrate) navigator.vibrate([300, 100, 300]);
+  playTimeUpSound();
   renderEnd('impostores', 'tiempo');
   show('screen-end');
 }
@@ -540,6 +542,47 @@ function stopVoteTimer() {
   clearInterval(voteTicker);
   voteTicker = null;
   if (round) round.voteTimeLeft = Math.max(0, voteDeadline - Date.now());
+}
+
+// ---------- sonido de fin de tiempo ----------
+// Se genera con Web Audio (sin archivos). El contexto se crea en un toque del
+// usuario porque los navegadores móviles bloquean el audio hasta entonces.
+let audioCtx = null;
+
+function unlockAudio() {
+  try {
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return;
+    if (!audioCtx) audioCtx = new Ctx();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+  } catch { /* sin audio */ }
+}
+
+// Alarma: tres pitidos rápidos y uno largo que baja de tono.
+function playTimeUpSound() {
+  if (!audioCtx) return;
+  try {
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const t0 = audioCtx.currentTime + 0.05;
+    const beep = (start, dur, from, to) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(from, start);
+      osc.frequency.exponentialRampToValueAtTime(to, start + dur);
+      gain.gain.setValueAtTime(0.0001, start);
+      gain.gain.exponentialRampToValueAtTime(0.25, start + 0.02);
+      gain.gain.setValueAtTime(0.25, start + dur - 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+      osc.connect(gain).connect(audioCtx.destination);
+      osc.start(start);
+      osc.stop(start + dur + 0.02);
+    };
+    beep(t0, 0.15, 880, 880);
+    beep(t0 + 0.22, 0.15, 880, 880);
+    beep(t0 + 0.44, 0.15, 880, 880);
+    beep(t0 + 0.7, 0.9, 660, 220);
+  } catch { /* sin audio */ }
 }
 
 document.addEventListener('visibilitychange', () => { if (voteTicker && !document.hidden) tickVoteTimer(); });
