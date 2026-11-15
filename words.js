@@ -1,6 +1,7 @@
 'use strict';
 
-// Banco de palabras por categoría (mínimo 500 por categoría, sin repetidas entre categorías).
+// Banco de palabras por categoría. Las generales tienen 500+ palabras sin repetidas entre sí;
+// "Dante Alighieri" es una categoría personalizada más chica.
 // Para agregar palabras, sumalas a la lista correspondiente; para agregar una categoría,
 // agregá un objeto nuevo con id, name, icon y words.
 const CATEGORIES = [
@@ -970,6 +971,26 @@ const CATEGORIES = [
       'Dínamo', 'Motor eléctrico', 'Motor a combustión', 'Turbina de avión', 'Avión supersónico',
       'Barrera del sonido', 'Túnel de viento', 'Paracaídas', 'Globo de helio', 'Dirigible',
       'Batiscafo', 'Traje de buzo', 'Escafandra',
+    ],
+  },
+  {
+    id: 'dante',
+    name: 'Dante Alighieri',
+    icon: '🏫',
+    words: [
+      'Judith',
+      'Humo',
+      'Recaudación',
+      'Feria sin comida',
+      'Feria',
+      'Tarantella',
+      'Niños',
+      'Cuota',
+      'Pedorro',
+      'Italiano',
+      'Tarea escolar',
+      'Secundario más barato',
+      'Gareca preceptor'
     ],
   },
 ];
