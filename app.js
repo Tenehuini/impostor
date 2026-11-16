@@ -329,8 +329,6 @@ function startRound() {
     // Tiempo de votación en grupo que queda; se descuenta entre votaciones.
     voteTimeLeft: groupVoteSeconds(state.players.length) * 1000,
   };
-  const imgUrl = wordImageUrl(round.word);
-  if (imgUrl) new Image().src = imgUrl; // precargar para que aparezca al instante
   renderHandoff();
   show('screen-reveal');
   return true;
@@ -345,7 +343,6 @@ $('#start-game').addEventListener('click', () => {
 // ---------- pantalla 4: reparto ----------
 const revealBtn = $('#reveal-btn');
 const hideBtn = $('#hide-btn');
-$('#role-img').addEventListener('error', (e) => { e.target.hidden = true; }); // sin internet o imagen caída
 
 function renderHandoff() {
   const p = round.players[round.index];
@@ -368,11 +365,6 @@ revealBtn.addEventListener('click', () => {
   $('#role-label').textContent = imp ? (p.gender === 'f' ? 'Sos la' : 'Sos el') : 'Tu palabra es';
   if (imp) $('#role-word').textContent = impostorWord(p);
   else setWordText($('#role-word'), round.word);
-  // Miniatura de ayuda, solo para quien sabe la palabra. Sin internet no aparece.
-  const img = $('#role-img');
-  const src = imp ? null : wordImageUrl(round.word);
-  img.hidden = !src;
-  if (src) img.src = src; else img.removeAttribute('src');
   $('#role-hint').textContent = imp
     ? 'No sabés la palabra. Escuchá a los demás y disimulá.'
     : 'Memorizala y no se la muestres a nadie.';
@@ -387,7 +379,6 @@ revealBtn.addEventListener('click', () => {
 hideBtn.addEventListener('click', () => {
   // Borrar el contenido antes de cambiar de pantalla para que no quede visible.
   $('#role-word').textContent = '';
-  $('#role-img').hidden = true;
   $('#role').classList.remove('is-impostor');
   round.index++;
   if (round.index < round.players.length) renderHandoff();
@@ -397,7 +388,6 @@ hideBtn.addEventListener('click', () => {
 $('#quit-round').addEventListener('click', () => {
   if (!confirm('¿Cancelar la partida? Se va a elegir otra palabra.')) return;
   $('#role-word').textContent = '';
-  $('#role-img').hidden = true;
   round = null;
   renderCategories();
   show('screen-categories');

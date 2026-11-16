@@ -1,7 +1,7 @@
 // Cache offline: el juego funciona sin conexión una vez abierto.
-const CACHE = 'impostor-v22';
+const CACHE = 'impostor-v23';
 const FILES = [
-  './', 'index.html', 'styles.css', 'app.js', 'words.js', 'images.js', 'changelog.js', 'manifest.json',
+  './', 'index.html', 'styles.css', 'app.js', 'words.js', 'changelog.js', 'manifest.json',
   'assets/male.jpg', 'assets/female.jpg', 'assets/icon-192.png', 'assets/icon-512.png',
 ];
 
@@ -22,7 +22,6 @@ self.addEventListener('activate', (e) => {
 // index.html nuevo con un app.js viejo guardado hasta 10 minutos.
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
-  if (new URL(e.request.url).origin !== location.origin) return; // imágenes de Wikipedia: las maneja el navegador
   const req = new Request(e.request, { cache: 'no-cache' });
   e.respondWith(
     fetch(req)
