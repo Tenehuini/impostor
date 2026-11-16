@@ -48,4 +48,4 @@ Revisá que el interruptor lateral no esté en modo silencio.
 
 ## Para quien mantiene el juego
 
-Cada vez que se publica un cambio, agregá una entrada **al principio** de `changelog.js` con un número de `version` mayor al anterior. Al abrir la app, cada persona ve una sola vez un cartel con las novedades que todavía no vio. Además, en `sw.js` subí el número de `CACHE` (por ejemplo, de `impostor-v17` a `impostor-v18`) para que los celulares descarguen los archivos nuevos.
+Cada vez que se publica un cambio, reemplazá la entrada de `changelog.js` por la nueva novedad, con un número de `version` mayor al anterior. Al abrir la app, quien todavía no la vio ve una sola vez un cartel con esa última novedad. Además, en `sw.js` subí el número de `CACHE` (por ejemplo, de `impostor-v17` a `impostor-v18`) para que los celulares descarguen los archivos nuevos.
