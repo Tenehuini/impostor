@@ -990,7 +990,12 @@ const CATEGORIES = [
       'Italiano',
       'Tarea escolar',
       'Secundario más barato',
-      'Gareca preceptor'
+      'Gareca preceptor',
+      'Juntarse a comer',
+      'Antonela artística',
+      'Emiliano atleta',
+      'Fran Asador',
+      'Hijos múltiples'
     ],
   },
   {

@@ -5,6 +5,13 @@
 // versión mayor al anterior. Escribir para jugadores, no para programadores.
 const CHANGELOG = [
   {
+    version: 2,
+    date: '2026-11-15',
+    items: [
+      'Nuevas palabras en la categoría Dante Alighieri.',
+    ],
+  },
+  {
     version: 1,
     date: '2026-11-15',
     items: [
