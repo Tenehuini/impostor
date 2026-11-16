@@ -295,6 +295,17 @@ function chooseWord() {
   return null;
 }
 
+// Muestra la palabra; si termina con una aclaración entre paréntesis
+// (por ejemplo "(Las Flores)"), la pone en un renglón aparte y más chica.
+function setWordText(el, word) {
+  const m = word.match(/^(.*\S)\s*(\([^()]*\))$/);
+  if (!m) { el.textContent = word; return; }
+  const note = document.createElement('span');
+  note.className = 'word-note';
+  note.textContent = m[2];
+  el.replaceChildren(document.createTextNode(m[1]), note);
+}
+
 // La ronda vive solo en memoria: la palabra y los impostores no se guardan.
 let round = null;
 
@@ -352,7 +363,8 @@ revealBtn.addEventListener('click', () => {
   const roleEl = $('#role');
   roleEl.classList.toggle('is-impostor', imp);
   $('#role-label').textContent = imp ? (p.gender === 'f' ? 'Sos la' : 'Sos el') : 'Tu palabra es';
-  $('#role-word').textContent = imp ? impostorWord(p) : round.word;
+  if (imp) $('#role-word').textContent = impostorWord(p);
+  else setWordText($('#role-word'), round.word);
   $('#role-hint').textContent = imp
     ? 'No sabés la palabra. Escuchá a los demás y disimulá.'
     : 'Memorizala y no se la muestres a nadie.';
@@ -774,7 +786,7 @@ function renderEnd(result, reason) {
     $('#end-title').textContent = 'Partida terminada';
     $('#end-sub').textContent = 'Sin ganador.';
   }
-  $('#end-word').textContent = round.word;
+  setWordText($('#end-word'), round.word);
   $('#end-imp-title').textContent = impLabel.charAt(0).toUpperCase() + impLabel.slice(1);
 
   $('#end-impostors').replaceChildren(...imps.map((p) => {

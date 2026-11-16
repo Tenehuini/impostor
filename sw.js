@@ -1,5 +1,5 @@
 // Cache offline: el juego funciona sin conexión una vez abierto.
-const CACHE = 'impostor-v14';
+const CACHE = 'impostor-v16';
 const FILES = [
   './', 'index.html', 'styles.css', 'app.js', 'words.js', 'manifest.json',
   'assets/male.jpg', 'assets/female.jpg', 'assets/icon-192.png', 'assets/icon-512.png',
