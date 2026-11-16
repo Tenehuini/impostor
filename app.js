@@ -827,7 +827,8 @@ function formatDate(iso) {
 
 // Muestra las entradas con versión mayor a `since` (todas si since es -1).
 function showNews(since, title) {
-  const entries = CHANGELOG.filter((e) => e.version > since).sort((a, b) => b.version - a.version);
+  // Solo la última novedad, no todo el historial.
+  const entries = CHANGELOG.filter((e) => e.version > since).sort((a, b) => b.version - a.version).slice(0, 1);
   if (!entries.length) return;
   $('#news-title').textContent = title;
   $('#news-body').replaceChildren(...entries.map((e) => {
