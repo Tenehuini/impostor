@@ -49,6 +49,7 @@
       <h2 class="list-title">Jugadores <span id="player-count" class="badge">0</span></h2>
       <ul id="player-list" class="player-list"></ul>
       <p id="empty-hint" class="hint">Todavía no hay jugadores. Se necesitan al menos 3.</p>
+      <p class="news-link-wrap"><button type="button" id="open-news" class="link-btn">Novedades</button></p>
 
       <footer class="bottom">
         <button id="to-config" class="btn btn-primary" disabled>Continuar</button>
@@ -272,7 +273,16 @@
     </section>
 
   </main>
+
+  <!-- Aviso de novedades -->
+  <dialog id="news-dialog" class="news-dialog" aria-labelledby="news-title">
+    <h2 id="news-title">¡Hay novedades!</h2>
+    <div id="news-body" class="news-body"></div>
+    <button type="button" id="news-ok" class="btn btn-primary">¡Genial!</button>
+  </dialog>
+
   <script src="words.js"></script>
+  <script src="changelog.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

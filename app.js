@@ -806,9 +806,70 @@ function renderEnd(result, reason) {
   }));
 }
 
+// ---------- novedades ----------
+const NEWS_KEY = 'impostor.newsSeen';
+const latestVersion = () => Math.max(0, ...CHANGELOG.map((e) => e.version));
+
+function readNewsSeen() {
+  try {
+    const v = localStorage.getItem(NEWS_KEY);
+    return v === null ? null : Number(v);
+  } catch { return null; }
+}
+function markNewsSeen() {
+  try { localStorage.setItem(NEWS_KEY, String(latestVersion())); } catch { /* sin storage */ }
+}
+
+function formatDate(iso) {
+  const [y, m, d] = iso.split('-').map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+// Muestra las entradas con versión mayor a `since` (todas si since es -1).
+function showNews(since, title) {
+  const entries = CHANGELOG.filter((e) => e.version > since).sort((a, b) => b.version - a.version);
+  if (!entries.length) return;
+  $('#news-title').textContent = title;
+  $('#news-body').replaceChildren(...entries.map((e) => {
+    const sec = document.createElement('section');
+    const h = document.createElement('h3');
+    h.textContent = formatDate(e.date);
+    const ul = document.createElement('ul');
+    ul.append(...e.items.map((t) => { const li = document.createElement('li'); li.textContent = t; return li; }));
+    sec.append(h, ul);
+    return sec;
+  }));
+  const dlg = $('#news-dialog');
+  if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+}
+
+function closeNews() {
+  markNewsSeen();
+  const dlg = $('#news-dialog');
+  if (dlg.close) dlg.close(); else dlg.removeAttribute('open');
+}
+
+$('#news-ok').addEventListener('click', closeNews);
+$('#news-dialog').addEventListener('cancel', markNewsSeen); // cerrar con "atrás" también cuenta
+$('#open-news').addEventListener('click', () => showNews(-1, 'Novedades'));
+
+// Al abrir: quien nunca usó la app no ve el aviso (todo es nuevo para esa
+// persona); quien ya la usaba ve lo que cambió desde la última vez.
+function checkNews() {
+  const seen = readNewsSeen();
+  if (seen === null) {
+    const usedBefore = (() => { try { return localStorage.getItem(STORAGE_KEY) !== null; } catch { return false; } })();
+    if (usedBefore) showNews(0, '¡Hay novedades!');
+    else markNewsSeen();
+  } else if (seen < latestVersion()) {
+    showNews(seen, '¡Hay novedades!');
+  }
+}
+
 // ---------- init ----------
 buildCategoryList();
 renderPlayers();
+checkNews();
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
