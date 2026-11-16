@@ -872,6 +872,13 @@ $('#open-install').addEventListener('click', () => {
   if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
 });
 document.querySelectorAll('.install-tab').forEach((t) => t.addEventListener('click', () => setInstallTab(t.dataset.os)));
+// Copiar la dirección del juego (para pegarla en Chrome o Safari).
+document.querySelectorAll('.copy-url').forEach((b) => b.addEventListener('click', () => {
+  const done = () => { b.textContent = '¡Copiado!'; setTimeout(() => { b.textContent = 'Copiar'; }, 2000); };
+  const selectText = () => { const r = document.createRange(); r.selectNodeContents(b.previousElementSibling); const s = getSelection(); s.removeAllRanges(); s.addRange(r); };
+  if (navigator.clipboard?.writeText) navigator.clipboard.writeText(b.dataset.url).then(done, selectText);
+  else selectText();
+}));
 $('#install-ok').addEventListener('click', () => {
   const dlg = $('#install-dialog');
   if (dlg.close) dlg.close(); else dlg.removeAttribute('open');

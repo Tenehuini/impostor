@@ -6,10 +6,10 @@
 // el número). Escribir para jugadores, no para programadores.
 const CHANGELOG = [
   {
-    version: 6,
+    version: 7,
     date: '2026-11-16',
     items: [
-      'Se quitaron las imágenes de las palabras: la app vuelve a funcionar 100% sin internet.',
+      'En «Cómo instalar la app» ahora aparece la dirección del juego, con un botón para copiarla y pegarla en el navegador.',
     ],
   },
 ];
