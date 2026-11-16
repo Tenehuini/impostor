@@ -276,4 +276,9 @@ html, body {
 .news-dialog h2 { margin: 0; font-size: 1.4rem; text-align: center; }
 .news-body { overflow-y: auto; }
 .news-body h3 { margin: 4px 0 6px; font-size: .85rem; color: var(--muted); font-weight: 600; }
+.install-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: var(--bg); padding: 4px; border-radius: 12px; }
+.install-tab { border: 0; border-radius: 9px; padding: 10px; font: inherit; font-weight: 700; background: transparent; color: var(--muted); }
+.install-tab[aria-selected="true"] { background: var(--surface-2); color: var(--text); }
+.install-panel ol { margin: 0; padding-left: 22px; display: grid; gap: 10px; line-height: 1.4; }
+.install-note { margin: 10px 0 0; color: var(--muted); font-size: .9rem; text-align: center; }
 .news-body ul { margin: 0 0 8px; padding-left: 20px; display: grid; gap: 8px; line-height: 1.35; }

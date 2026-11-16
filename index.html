@@ -49,7 +49,7 @@
       <h2 class="list-title">Jugadores <span id="player-count" class="badge">0</span></h2>
       <ul id="player-list" class="player-list"></ul>
       <p id="empty-hint" class="hint">Todavía no hay jugadores. Se necesitan al menos 3.</p>
-      <p class="news-link-wrap"><button type="button" id="open-news" class="link-btn">Novedades</button></p>
+      <p class="news-link-wrap"><button type="button" id="open-install" class="link-btn">📲 Cómo instalar la app</button> · <button type="button" id="open-news" class="link-btn">Novedades</button></p>
 
       <footer class="bottom">
         <button id="to-config" class="btn btn-primary" disabled>Continuar</button>
@@ -279,6 +279,37 @@
     <h2 id="news-title">¡Hay novedades!</h2>
     <div id="news-body" class="news-body"></div>
     <button type="button" id="news-ok" class="btn btn-primary">¡Genial!</button>
+  </dialog>
+
+  <!-- Cómo instalar -->
+  <dialog id="install-dialog" class="news-dialog" aria-labelledby="install-title">
+    <h2 id="install-title">Instalar la app</h2>
+    <p id="install-done" class="install-note" hidden>✅ Ya estás usando la app instalada.</p>
+    <div class="install-tabs" role="tablist">
+      <button type="button" role="tab" class="install-tab" data-os="android" aria-selected="true">Android</button>
+      <button type="button" role="tab" class="install-tab" data-os="ios" aria-selected="false">iPhone</button>
+    </div>
+    <div class="news-body">
+      <div class="install-panel" data-os="android" role="tabpanel">
+        <ol>
+          <li>Abrí esta página en <b>Chrome</b> (o en el navegador que uses: Samsung Internet, Edge, Firefox…).</li>
+          <li>Tocá el menú del navegador: <b>⋮</b> (tres puntos) o <b>≡</b> (tres rayas), arriba o abajo a la derecha.</li>
+          <li>Elegí <b>Instalar app</b>. Si no aparece, buscá <b>Agregar a pantalla principal</b> o <b>Agregar página a → Pantalla de inicio</b>.</li>
+          <li>Confirmá con <b>Instalar</b> o <b>Agregar</b>.</li>
+        </ol>
+        <p class="install-note">El ícono de los detectives queda en la pantalla de inicio, como cualquier app.</p>
+      </div>
+      <div class="install-panel" data-os="ios" role="tabpanel" hidden>
+        <ol>
+          <li>Abrí esta página en <b>Safari</b> (es lo más seguro; en otros navegadores no siempre aparece la opción).</li>
+          <li>Tocá el botón <b>Compartir</b>: el cuadrado con una flecha hacia arriba ⬆️. Según la versión está en la barra de abajo, arriba, o dentro del menú <b>⋯</b>.</li>
+          <li>Deslizá hacia abajo y elegí <b>Agregar a inicio</b> (o <b>Agregar a pantalla de inicio</b>).</li>
+          <li>Tocá <b>Agregar</b>, arriba a la derecha.</li>
+        </ol>
+        <p class="install-note">El ícono queda en la pantalla de inicio. Funciona igual en iPad.</p>
+      </div>
+    </div>
+    <button type="button" id="install-ok" class="btn btn-primary" autofocus>Entendido</button>
   </dialog>
 
   <script src="words.js"></script>

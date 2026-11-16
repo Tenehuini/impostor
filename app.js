@@ -853,6 +853,29 @@ $('#news-ok').addEventListener('click', closeNews);
 $('#news-dialog').addEventListener('cancel', markNewsSeen); // cerrar con "atrás" también cuenta
 $('#open-news').addEventListener('click', () => showNews(-1, 'Novedades'));
 
+// ---------- Cómo instalar ----------
+function setInstallTab(os) {
+  document.querySelectorAll('.install-tab').forEach((t) => t.setAttribute('aria-selected', String(t.dataset.os === os)));
+  document.querySelectorAll('.install-panel').forEach((p) => { p.hidden = p.dataset.os !== os; });
+}
+function isStandalone() {
+  return window.matchMedia?.('(display-mode: standalone)').matches || navigator.standalone === true;
+}
+$('#open-install').addEventListener('click', () => {
+  // Arranca en la pestaña del celular que se está usando; la otra sigue disponible.
+  const ua = navigator.userAgent;
+  const ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  setInstallTab(ios ? 'ios' : 'android');
+  $('#install-done').hidden = !isStandalone();
+  const dlg = $('#install-dialog');
+  if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+});
+document.querySelectorAll('.install-tab').forEach((t) => t.addEventListener('click', () => setInstallTab(t.dataset.os)));
+$('#install-ok').addEventListener('click', () => {
+  const dlg = $('#install-dialog');
+  if (dlg.close) dlg.close(); else dlg.removeAttribute('open');
+});
+
 // Al abrir: quien nunca usó la app no ve el aviso (todo es nuevo para esa
 // persona); quien ya la usaba ve lo que cambió desde la última vez.
 function checkNews() {

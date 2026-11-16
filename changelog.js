@@ -5,6 +5,13 @@
 // versión mayor al anterior. Escribir para jugadores, no para programadores.
 const CHANGELOG = [
   {
+    version: 4,
+    date: '2026-11-16',
+    items: [
+      'Nuevo botón "Cómo instalar la app" en la primera pantalla, con los pasos para Android y iPhone.',
+    ],
+  },
+  {
     version: 3,
     date: '2026-11-15',
     items: [
