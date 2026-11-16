@@ -995,7 +995,10 @@ const CATEGORIES = [
       'Antonela artística',
       'Emiliano atleta',
       'Fran Asador',
-      'Hijos múltiples'
+      'Hijos múltiples',
+      'Todos en pedo',
+      'Fernet con Coca Zero',
+      'Vino tinto para todos'
     ],
   },
   {
