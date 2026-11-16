@@ -5,6 +5,13 @@
 // versión mayor al anterior. Escribir para jugadores, no para programadores.
 const CHANGELOG = [
   {
+    version: 5,
+    date: '2026-11-16',
+    items: [
+      'Al ver tu palabra aparece una imagen chiquita debajo, por si no la conocés (necesita internet; no todas las palabras tienen).',
+    ],
+  },
+  {
     version: 4,
     date: '2026-11-16',
     items: [

@@ -43,6 +43,9 @@ Solo en tu celular. La app no envía datos a ningún servidor.
 **¿Cómo la desinstalo?**
 Igual que cualquier app: mantené apretado el ícono y elegí **Desinstalar** (Android) o **Eliminar app** (iPhone).
 
+**¿De dónde salen las imágenes de las palabras?**
+De Wikipedia y Wikimedia Commons. Se ven solo con internet, y no todas las palabras tienen. Para quitar una imagen equivocada, borrá su línea en `images.js`.
+
 **En el iPhone no suena la alarma del temporizador.**
 Revisá que el interruptor lateral no esté en modo silencio.
 

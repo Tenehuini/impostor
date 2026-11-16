@@ -192,6 +192,10 @@ html, body {
   margin: 0; font-size: clamp(2rem, 11vw, 3.4rem); font-weight: 900; line-height: 1.1;
   overflow-wrap: anywhere; color: var(--text);
 }
+.word-img {
+  margin: 16px 0 4px; width: 132px; height: 132px; object-fit: cover;
+  border-radius: 14px; background: var(--surface-2);
+}
 .role.is-impostor .role-word { color: var(--accent); letter-spacing: .06em; }
 .role.is-impostor .role-label { color: var(--accent); }
 
