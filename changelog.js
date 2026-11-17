@@ -6,10 +6,10 @@
 // el número). Escribir para jugadores, no para programadores.
 const CHANGELOG = [
   {
-    version: 7,
-    date: '2026-11-16',
+    version: 8,
+    date: '2026-11-17',
     items: [
-      'En «Cómo instalar la app» ahora aparece la dirección del juego, con un botón para copiarla y pegarla en el navegador.',
+      'Quien empieza la ronda se sortea al azar, y casi nunca es un impostor (1 vez cada 50), así el impostor no queda en evidencia de entrada.',
     ],
   },
 ];

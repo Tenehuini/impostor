@@ -314,6 +314,15 @@ const alivePlayers = () => round.players.filter((p) => !round.eliminated.has(p.i
 const impostorWord = (p) => (p.gender === 'f' ? 'IMPOSTORA' : 'IMPOSTOR');
 const plural = (n, one, many) => (n === 1 ? one : many);
 
+// Quien empieza: 1 en 50 de que sea impostor (sin palabra, se delataría enseguida).
+// Primero se sortea si empieza un impostor y después, al azar, quién dentro de ese grupo.
+const IMPOSTOR_STARTS_ONE_IN = 50;
+function pickStarter(players, impostorIds) {
+  const impostorStarts = randomInt(IMPOSTOR_STARTS_ONE_IN) === 0;
+  const pool = players.filter((p) => impostorIds.has(p.id) === impostorStarts);
+  return pickRandom(pool.length ? pool : players);
+}
+
 function startRound() {
   const choice = chooseWord();
   if (!choice) return false;
@@ -324,7 +333,7 @@ function startRound() {
     impostorIds,
     eliminated: new Set(),
     index: 0, // jugador que está viendo su rol
-    starterId: pickRandom(state.players).id, // quien empieza cada vuelta de pistas
+    starterId: pickStarter(state.players, impostorIds).id, // quien empieza cada vuelta de pistas
     lap: 0, // número de vuelta de pistas
     // Tiempo de votación en grupo que queda; se descuenta entre votaciones.
     voteTimeLeft: groupVoteSeconds(state.players.length) * 1000,
