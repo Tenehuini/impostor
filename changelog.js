@@ -6,10 +6,10 @@
 // el número). Escribir para jugadores, no para programadores.
 const CHANGELOG = [
   {
-    version: 8,
+    version: 9,
     date: '2026-11-17',
     items: [
-      'Quien empieza la ronda se sortea al azar, y casi nunca es un impostor (1 vez cada 50), así el impostor no queda en evidencia de entrada.',
+      'Quien empieza se sortea en cada ronda. En la primera, casi nunca es un impostor (1 vez cada 50), así no queda en evidencia de entrada; en las siguientes, cualquiera puede empezar.',
     ],
   },
 ];

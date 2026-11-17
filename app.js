@@ -333,7 +333,7 @@ function startRound() {
     impostorIds,
     eliminated: new Set(),
     index: 0, // jugador que está viendo su rol
-    starterId: pickStarter(state.players, impostorIds).id, // quien empieza cada vuelta de pistas
+    starterId: pickStarter(state.players, impostorIds).id, // quien empieza la primera vuelta de pistas
     lap: 0, // número de vuelta de pistas
     // Tiempo de votación en grupo que queda; se descuenta entre votaciones.
     voteTimeLeft: groupVoteSeconds(state.players.length) * 1000,
@@ -419,6 +419,9 @@ function lapOrder() {
 
 function startLap() {
   round.lap++;
+  // Primera vuelta: quien empieza ya salió de pickStarter (1 en 50 de ser impostor).
+  // Desde la segunda: sorteo parejo entre todos los que siguen en juego.
+  if (round.lap > 1) round.starterId = pickRandom(alivePlayers()).id;
   round.order = lapOrder();
   round.turn = 0;
   renderClue();
