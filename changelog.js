@@ -6,10 +6,10 @@
 // el número). Escribir para jugadores, no para programadores.
 const CHANGELOG = [
   {
-    version: 10,
+    version: 11,
     date: '2026-11-18',
     items: [
-      '¡El doble de palabras! Ahora cada categoría general tiene más de 1000 palabras distintas.',
+      'Al ver tu palabra, debajo aparece la categoría a la que pertenece.',
     ],
   },
 ];

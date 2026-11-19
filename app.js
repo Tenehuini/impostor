@@ -297,13 +297,17 @@ function chooseWord() {
 
 // Muestra la palabra; si termina con una aclaración entre paréntesis
 // (por ejemplo "(Las Flores)"), la pone en un renglón aparte y más chica.
-function setWordText(el, word) {
+// Muestra la palabra y, debajo y más chico, la aclaración entre paréntesis.
+// Si la palabra no trae una aclaración propia (como "(Las Flores)"), usa la categoría.
+function setWordText(el, word, category) {
   const m = word.match(/^(.*\S)\s*(\([^()]*\))$/);
-  if (!m) { el.textContent = word; return; }
+  const main = m ? m[1] : word;
+  const noteText = m ? m[2] : (category ? `(${category})` : '');
+  if (!noteText) { el.textContent = word; return; }
   const note = document.createElement('span');
   note.className = 'word-note';
-  note.textContent = m[2];
-  el.replaceChildren(document.createTextNode(m[1]), note);
+  note.textContent = noteText;
+  el.replaceChildren(document.createTextNode(main), note);
 }
 
 // La ronda vive solo en memoria: la palabra y los impostores no se guardan.
@@ -329,6 +333,7 @@ function startRound() {
   const impostorIds = new Set(shuffle(state.players).slice(0, state.impostors).map((p) => p.id));
   round = {
     word: choice.word,
+    category: choice.category, // null si es palabra personalizada
     players: state.players.slice(), // el celular pasa en el orden de la lista
     impostorIds,
     eliminated: new Set(),
@@ -373,7 +378,7 @@ revealBtn.addEventListener('click', () => {
   roleEl.classList.toggle('is-impostor', imp);
   $('#role-label').textContent = imp ? (p.gender === 'f' ? 'Sos la' : 'Sos el') : 'Tu palabra es';
   if (imp) $('#role-word').textContent = impostorWord(p);
-  else setWordText($('#role-word'), round.word);
+  else setWordText($('#role-word'), round.word, round.category);
   $('#role-hint').textContent = imp
     ? 'No sabés la palabra. Escuchá a los demás y disimulá.'
     : 'Memorizala y no se la muestres a nadie.';
