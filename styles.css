@@ -8,6 +8,20 @@
   --accent-press: #c42a36;
   --ok: #f2f2f2;
   --radius: 16px;
+  --error: #ff8a93;
+}
+
+/* Modo día (el de noche es el de :root, por defecto) */
+[data-theme="light"] {
+  --bg: #f3f3f6;
+  --surface: #ffffff;
+  --surface-2: #e7e7ec;
+  --text: #17171a;
+  --muted: #5e5e68;
+  --accent: #d12a3a;
+  --accent-press: #ad1f2d;
+  --ok: #17171a;
+  --error: #c0182a;
 }
 
 [hidden] { display: none !important; }
@@ -76,7 +90,7 @@ html, body {
 .gender-opt:has(input:checked) { border-color: var(--accent); }
 .gender-opt:has(input:focus-visible) { outline: 2px solid var(--text); outline-offset: 2px; }
 
-.error { color: #ff8a93; margin: 12px 0 0; font-size: .9rem; }
+.error { color: var(--error); margin: 12px 0 0; font-size: .9rem; }
 
 .btn {
   width: 100%; height: 52px; border: 0; border-radius: 14px;
@@ -221,7 +235,7 @@ html, body {
 .tag-caught { background: var(--surface-2); color: var(--text); }
 .tag-free { background: var(--accent); color: #fff; }
 /* Dejar lugar al botón de volver/cerrar para que no tape el título */
-.top:has(.back) { padding: 0 52px; }
+.top:has(.back), .top:has(.theme-btn) { padding: 0 52px; }
 
 /* ---------- Tipo de votación (configuración) ---------- */
 .vote-mode { display: grid; gap: 8px; }
@@ -285,3 +299,11 @@ html, body {
 .copy-url { flex: none; border: 0; border-radius: 8px; padding: 8px 10px; font: inherit; font-size: .85rem; font-weight: 700; background: var(--surface-2); color: var(--text); cursor: pointer; }
 .install-note { margin: 10px 0 0; color: var(--muted); font-size: .9rem; text-align: center; }
 .news-body ul { margin: 0 0 8px; padding-left: 20px; display: grid; gap: 8px; line-height: 1.35; }
+
+/* ---------- Modo día / noche ---------- */
+.theme-btn {
+  position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+  width: 44px; height: 44px; border: 0; border-radius: 50%;
+  background: var(--surface); color: var(--text); font-size: 1.3rem; line-height: 1; cursor: pointer;
+}
+[data-theme="light"] .news-dialog::backdrop { background: rgba(0, 0, 0, .35); }

@@ -11,6 +11,10 @@
   <link rel="icon" href="assets/icon-192.png">
   <link rel="apple-touch-icon" href="assets/icon-192.png">
   <link rel="stylesheet" href="styles.css">
+  <script>
+    // Aplicar el tema guardado antes de pintar, para que no parpadee. Noche por defecto.
+    try { if (localStorage.getItem('impostor.theme') === 'light') document.documentElement.setAttribute('data-theme', 'light'); } catch {}
+  </script>
 </head>
 <body>
   <main id="app">
@@ -18,6 +22,7 @@
     <!-- Pantalla 1: Jugadores -->
     <section class="screen" id="screen-players" data-active>
       <header class="top">
+        <button type="button" id="theme-toggle" class="theme-btn" aria-label="Cambiar a modo día">☀️</button>
         <h1>El Impostor</h1>
         <p class="sub">Agregá a los jugadores</p>
       </header>

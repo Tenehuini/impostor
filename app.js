@@ -914,7 +914,29 @@ function checkNews() {
   }
 }
 
+// ---------- modo día / noche ----------
+// Igual que en tecflo: atributo data-theme en <html> + localStorage. Noche por defecto.
+const THEME_KEY = 'impostor.theme';
+const THEME_COLOR = { dark: '#121214', light: '#f3f3f6' };
+
+function applyTheme(theme) {
+  if (theme === 'light') document.documentElement.setAttribute('data-theme', 'light');
+  else document.documentElement.removeAttribute('data-theme');
+  $('meta[name="theme-color"]').setAttribute('content', THEME_COLOR[theme]);
+  const btn = $('#theme-toggle');
+  btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+  btn.setAttribute('aria-label', theme === 'dark' ? 'Cambiar a modo día' : 'Cambiar a modo noche');
+}
+const currentTheme = () => (document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
+
+$('#theme-toggle').addEventListener('click', () => {
+  const next = currentTheme() === 'dark' ? 'light' : 'dark';
+  applyTheme(next);
+  try { localStorage.setItem(THEME_KEY, next); } catch { /* sin storage */ }
+});
+
 // ---------- init ----------
+applyTheme(currentTheme());
 buildCategoryList();
 renderPlayers();
 checkNews();

@@ -6,10 +6,10 @@
 // el número). Escribir para jugadores, no para programadores.
 const CHANGELOG = [
   {
-    version: 11,
-    date: '2026-11-18',
+    version: 12,
+    date: '2026-11-21',
     items: [
-      'Al ver tu palabra, debajo aparece la categoría a la que pertenece.',
+      'Nuevo modo día: tocá el ☀️ arriba a la derecha de la pantalla de jugadores para cambiarlo. El 🌙 vuelve al modo noche.',
     ],
   },
 ];
