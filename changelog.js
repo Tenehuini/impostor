@@ -6,10 +6,11 @@
 // el número). Escribir para jugadores, no para programadores.
 const CHANGELOG = [
   {
-    version: 12,
-    date: '2026-11-21',
+    version: 13,
+    date: '2026-11-22',
     items: [
-      'Nuevo modo día: tocá el ☀️ arriba a la derecha de la pantalla de jugadores para cambiarlo. El 🌙 vuelve al modo noche.',
+      'La categoría Dante Alighieri tiene 10 palabras nuevas.',
+      'Se quitó la categoría Las Flores.',
     ],
   },
 ];

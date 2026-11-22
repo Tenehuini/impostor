@@ -295,10 +295,8 @@ function chooseWord() {
   return null;
 }
 
-// Muestra la palabra; si termina con una aclaración entre paréntesis
-// (por ejemplo "(Las Flores)"), la pone en un renglón aparte y más chica.
-// Muestra la palabra y, debajo y más chico, la aclaración entre paréntesis.
-// Si la palabra no trae una aclaración propia (como "(Las Flores)"), usa la categoría.
+// Muestra la palabra y, debajo y más chico, la aclaración entre paréntesis
+// (por ejemplo "Mercurio (planeta)"). Si la palabra no trae una aclaración propia, usa la categoría.
 function setWordText(el, word, category) {
   const m = word.match(/^(.*\S)\s*(\([^()]*\))$/);
   const main = m ? m[1] : word;

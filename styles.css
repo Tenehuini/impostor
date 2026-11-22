@@ -275,7 +275,7 @@ html, body {
 @keyframes timer-pulse { 50% { opacity: .55; } }
 @media (prefers-reduced-motion: reduce) { .timer.is-low .timer-text { animation: none; } }
 
-/* Aclaración entre paréntesis debajo de la palabra, p. ej. "(Las Flores)" */
+/* Aclaración entre paréntesis debajo de la palabra, p. ej. la categoría */
 .word-note { display: block; font-size: .45em; font-weight: 700; color: var(--muted); margin-top: 6px; letter-spacing: 0; }
 
 /* ---------- Novedades ---------- */
