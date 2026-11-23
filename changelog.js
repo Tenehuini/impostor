@@ -6,11 +6,11 @@
 // el número). Escribir para jugadores, no para programadores.
 const CHANGELOG = [
   {
-    version: 13,
-    date: '2026-11-22',
+    version: 14,
+    date: '2026-11-23',
     items: [
-      'La categoría Dante Alighieri tiene 10 palabras nuevas.',
-      'Se quitó la categoría Las Flores.',
+      'Si te toca ser impostor, ahora ves una palabra relacionada con la palabra secreta para ayudarte a disimular.',
+      'La categoría Dante Alighieri ya no viene marcada: si querés jugarla, marcala a mano.',
     ],
   },
 ];

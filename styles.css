@@ -208,6 +208,8 @@ html, body {
 }
 .role.is-impostor .role-word { color: var(--accent); letter-spacing: .06em; }
 .role.is-impostor .role-label { color: var(--accent); }
+.role-related { margin: 16px 0 0; font-size: 1.15rem; color: var(--muted); overflow-wrap: anywhere; }
+.role-related strong { color: var(--text); font-size: 1.3rem; }
 
 .btn-ghost { background: transparent; color: var(--muted); }
 .bottom.stack { display: grid; gap: 8px; }

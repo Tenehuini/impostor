@@ -5,16 +5,26 @@ const STORAGE_KEY = 'impostor.state.v1';
 const AVATAR = { m: 'assets/male.jpg', f: 'assets/female.jpg' };
 
 const ALL_CATEGORY_IDS = CATEGORIES.map((c) => c.id);
+// Categorías que solo entran si la persona las marca a mano: no vienen marcadas
+// por defecto y "Marcar todas" no las toca.
+const OPT_IN_CATEGORY_IDS = ['dante'];
+const DEFAULT_CATEGORY_IDS = ALL_CATEGORY_IDS.filter((id) => !OPT_IN_CATEGORY_IDS.includes(id));
 
 const state = Object.assign(
-  { players: [], impostors: 1, voteMode: 'group', categories: ALL_CATEGORY_IDS.slice(), customEnabled: false, customWord: '' },
+  { players: [], impostors: 1, voteMode: 'group', categories: DEFAULT_CATEGORY_IDS.slice(), customEnabled: false, customWord: '' },
   load() || {}
 );
-// Las categorías agregadas en una versión nueva aparecen marcadas;
-// las guardadas que ya no existen se descartan.
+// Las categorías agregadas en una versión nueva aparecen marcadas (salvo las
+// opcionales); las guardadas que ya no existen se descartan.
 const knownCategories = state.knownCategories || ALL_CATEGORY_IDS.filter((id) => id !== 'comida');
+// Antes Dante Alighieri venía marcada por defecto: se desmarca una sola vez,
+// así queda incluida solo si la persona la vuelve a marcar.
+if (!state.optInReset) {
+  state.categories = state.categories.filter((id) => !OPT_IN_CATEGORY_IDS.includes(id));
+  state.optInReset = true;
+}
 state.categories = ALL_CATEGORY_IDS.filter(
-  (id) => state.categories.includes(id) || !knownCategories.includes(id)
+  (id) => state.categories.includes(id) || (!knownCategories.includes(id) && !OPT_IN_CATEGORY_IDS.includes(id))
 );
 state.knownCategories = ALL_CATEGORY_IDS.slice();
 delete state.round;
@@ -213,7 +223,7 @@ function renderCategories() {
     ? 'Usando palabra personalizada'
     : `${n} de ${CATEGORIES.length} · ${words} palabras`;
   const toggleAll = $('#cat-toggle-all');
-  toggleAll.textContent = n === CATEGORIES.length ? 'Desmarcar todas' : 'Marcar todas';
+  toggleAll.textContent = allDefaultsChecked() ? 'Desmarcar todas' : 'Marcar todas';
   toggleAll.disabled = state.customEnabled;
   toggleAll.style.visibility = state.customEnabled ? 'hidden' : '';
 
@@ -232,8 +242,11 @@ catList.addEventListener('change', (e) => {
   renderCategories();
 });
 
+// "Marcar todas" marca las generales; las opcionales (Dante Alighieri) quedan como estaban.
+const allDefaultsChecked = () => DEFAULT_CATEGORY_IDS.every((id) => state.categories.includes(id));
 $('#cat-toggle-all').addEventListener('click', () => {
-  state.categories = state.categories.length === CATEGORIES.length ? [] : ALL_CATEGORY_IDS.slice();
+  const optIn = state.categories.filter((id) => OPT_IN_CATEGORY_IDS.includes(id));
+  state.categories = allDefaultsChecked() ? optIn : ALL_CATEGORY_IDS.filter((id) => !OPT_IN_CATEGORY_IDS.includes(id) || optIn.includes(id));
   save();
   showCatError('');
   renderCategories();
@@ -282,14 +295,14 @@ function shuffle(arr) {
 function chooseWord() {
   if (state.customEnabled) {
     const word = state.customWord.trim().replace(/\s+/g, ' ');
-    return word ? { word, category: null } : null;
+    return word ? { word, category: null, related: null } : null;
   }
   const pool = CATEGORIES.filter((c) => state.categories.includes(c.id));
   const total = pool.reduce((sum, c) => sum + c.words.length, 0);
   if (!total) return null;
   let r = randomInt(total);
   for (const c of pool) {
-    if (r < c.words.length) return { word: c.words[r], category: c.name };
+    if (r < c.words.length) return { word: c.words[r], category: c.name, related: RELATED[c.words[r]] || null };
     r -= c.words.length;
   }
   return null;
@@ -332,6 +345,7 @@ function startRound() {
   round = {
     word: choice.word,
     category: choice.category, // null si es palabra personalizada
+    related: choice.related, // pista para los impostores; null si no hay (personalizada, Dante Alighieri)
     players: state.players.slice(), // el celular pasa en el orden de la lista
     impostorIds,
     eliminated: new Set(),
@@ -377,8 +391,13 @@ revealBtn.addEventListener('click', () => {
   $('#role-label').textContent = imp ? (p.gender === 'f' ? 'Sos la' : 'Sos el') : 'Tu palabra es';
   if (imp) $('#role-word').textContent = impostorWord(p);
   else setWordText($('#role-word'), round.word, round.category);
+  const related = imp && round.related;
+  $('#role-related').hidden = !related;
+  $('#role-related-word').textContent = related || '';
   $('#role-hint').textContent = imp
-    ? 'No sabés la palabra. Escuchá a los demás y disimulá.'
+    ? (related
+      ? 'No sabés la palabra, pero esta otra tiene relación con ella. Escuchá a los demás y disimulá.'
+      : 'No sabés la palabra. Escuchá a los demás y disimulá.')
     : 'Memorizala y no se la muestres a nadie.';
   $('#handoff').hidden = true;
   roleEl.hidden = false;
@@ -391,6 +410,7 @@ revealBtn.addEventListener('click', () => {
 hideBtn.addEventListener('click', () => {
   // Borrar el contenido antes de cambiar de pantalla para que no quede visible.
   $('#role-word').textContent = '';
+  $('#role-related-word').textContent = '';
   $('#role').classList.remove('is-impostor');
   round.index++;
   if (round.index < round.players.length) renderHandoff();
@@ -400,6 +420,7 @@ hideBtn.addEventListener('click', () => {
 $('#quit-round').addEventListener('click', () => {
   if (!confirm('¿Cancelar la partida? Se va a elegir otra palabra.')) return;
   $('#role-word').textContent = '';
+  $('#role-related-word').textContent = '';
   round = null;
   renderCategories();
   show('screen-categories');
