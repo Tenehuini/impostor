@@ -11199,7 +11199,7 @@ const RELATED_NINOS = {
   "Mantarraya": "Plana",
   "Langosta": "Roja",
   "Camarón": "Chiquito",
-  "Almeja": "Mariscos",
+  "Almeja": "Pescado",
   "Calamar": "Tinta",
   "Orca": "Blanca y negra",
   "Cachorro": "Bebé",
