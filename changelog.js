@@ -6,10 +6,11 @@
 // el número). Escribir para jugadores, no para programadores.
 const CHANGELOG = [
   {
-    version: 15,
+    version: 16,
     date: '2026-11-26',
     items: [
-      'Nueva categoría Adultos 🔞, al final de la lista: palabras zarpadas, lunfardo y doble sentido. Viene desmarcada; si la querés, marcala a mano.',
+      'Nueva categoría Niños 🧸, arriba de todo: 2000 palabras fáciles para jugar con chicos.',
+      'Al marcar Niños se desmarcan las demás categorías; al desmarcarla vuelven las de siempre.',
     ],
   },
 ];

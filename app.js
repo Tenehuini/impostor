@@ -7,7 +7,10 @@ const AVATAR = { m: 'assets/male.jpg', f: 'assets/female.jpg' };
 const ALL_CATEGORY_IDS = CATEGORIES.map((c) => c.id);
 // Categorías que solo entran si la persona las marca a mano: no vienen marcadas
 // por defecto y "Marcar todas" no las toca.
-const OPT_IN_CATEGORY_IDS = ['dante', 'adultos'];
+const OPT_IN_CATEGORY_IDS = ['ninos', 'dante', 'adultos'];
+// Niños se juega sola: al marcarla se desmarcan todas las demás, y al desmarcarla
+// vuelven las generales.
+const KIDS_CATEGORY_ID = 'ninos';
 const DEFAULT_CATEGORY_IDS = ALL_CATEGORY_IDS.filter((id) => !OPT_IN_CATEGORY_IDS.includes(id));
 
 const state = Object.assign(
@@ -189,7 +192,7 @@ function showCatError(msg) {
 function buildCategoryList() {
   catList.replaceChildren(...CATEGORIES.map((c) => {
     const label = document.createElement('label');
-    label.className = 'cat-opt';
+    label.className = c.id === KIDS_CATEGORY_ID ? 'cat-opt cat-opt--wide' : 'cat-opt';
     const input = document.createElement('input');
     input.type = 'checkbox';
     input.value = c.id;
@@ -234,18 +237,22 @@ function renderCategories() {
 
 catList.addEventListener('change', (e) => {
   const input = e.target;
-  state.categories = input.checked
-    ? ALL_CATEGORY_IDS.filter((id) => id === input.value || state.categories.includes(id))
-    : state.categories.filter((id) => id !== input.value);
+  if (input.value === KIDS_CATEGORY_ID) {
+    state.categories = input.checked ? [KIDS_CATEGORY_ID] : DEFAULT_CATEGORY_IDS.slice();
+  } else {
+    state.categories = input.checked
+      ? ALL_CATEGORY_IDS.filter((id) => id !== KIDS_CATEGORY_ID && (id === input.value || state.categories.includes(id)))
+      : state.categories.filter((id) => id !== input.value);
+  }
   save();
   showCatError('');
   renderCategories();
 });
 
-// "Marcar todas" marca las generales; las opcionales (Dante Alighieri, Adultos) quedan como estaban.
+// "Marcar todas" marca las generales; Dante Alighieri y Adultos quedan como estaban y Niños se desmarca.
 const allDefaultsChecked = () => DEFAULT_CATEGORY_IDS.every((id) => state.categories.includes(id));
 $('#cat-toggle-all').addEventListener('click', () => {
-  const optIn = state.categories.filter((id) => OPT_IN_CATEGORY_IDS.includes(id));
+  const optIn = state.categories.filter((id) => OPT_IN_CATEGORY_IDS.includes(id) && id !== KIDS_CATEGORY_ID);
   state.categories = allDefaultsChecked() ? optIn : ALL_CATEGORY_IDS.filter((id) => !OPT_IN_CATEGORY_IDS.includes(id) || optIn.includes(id));
   save();
   showCatError('');
@@ -292,6 +299,9 @@ function shuffle(arr) {
 // Palabra personalizada si está activada; si no, una palabra al azar entre todas
 // las de las categorías marcadas. Así cada categoría sale en proporción a
 // cuántas palabras tiene (una categoría chica sale poco si hay otras marcadas).
+function relatedFor(category, word) {
+  return (category.id === KIDS_CATEGORY_ID && RELATED_NINOS[word]) || RELATED[word] || null;
+}
 function chooseWord() {
   if (state.customEnabled) {
     const word = state.customWord.trim().replace(/\s+/g, ' ');
@@ -302,7 +312,7 @@ function chooseWord() {
   if (!total) return null;
   let r = randomInt(total);
   for (const c of pool) {
-    if (r < c.words.length) return { word: c.words[r], category: c.name, related: RELATED[c.words[r]] || null };
+    if (r < c.words.length) return { word: c.words[r], category: c.name, related: relatedFor(c, c.words[r]) };
     r -= c.words.length;
   }
   return null;
