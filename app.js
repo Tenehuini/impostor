@@ -7,7 +7,7 @@ const AVATAR = { m: 'assets/male.jpg', f: 'assets/female.jpg' };
 const ALL_CATEGORY_IDS = CATEGORIES.map((c) => c.id);
 // Categorías que solo entran si la persona las marca a mano: no vienen marcadas
 // por defecto y "Marcar todas" no las toca.
-const OPT_IN_CATEGORY_IDS = ['dante'];
+const OPT_IN_CATEGORY_IDS = ['dante', 'adultos'];
 const DEFAULT_CATEGORY_IDS = ALL_CATEGORY_IDS.filter((id) => !OPT_IN_CATEGORY_IDS.includes(id));
 
 const state = Object.assign(
@@ -242,7 +242,7 @@ catList.addEventListener('change', (e) => {
   renderCategories();
 });
 
-// "Marcar todas" marca las generales; las opcionales (Dante Alighieri) quedan como estaban.
+// "Marcar todas" marca las generales; las opcionales (Dante Alighieri, Adultos) quedan como estaban.
 const allDefaultsChecked = () => DEFAULT_CATEGORY_IDS.every((id) => state.categories.includes(id));
 $('#cat-toggle-all').addEventListener('click', () => {
   const optIn = state.categories.filter((id) => OPT_IN_CATEGORY_IDS.includes(id));

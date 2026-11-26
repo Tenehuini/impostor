@@ -6,11 +6,10 @@
 // el número). Escribir para jugadores, no para programadores.
 const CHANGELOG = [
   {
-    version: 14,
-    date: '2026-11-23',
+    version: 15,
+    date: '2026-11-26',
     items: [
-      'Si te toca ser impostor, ahora ves una palabra relacionada con la palabra secreta para ayudarte a disimular.',
-      'La categoría Dante Alighieri ya no viene marcada: si querés jugarla, marcala a mano.',
+      'Nueva categoría Adultos 🔞, al final de la lista: palabras zarpadas, lunfardo y doble sentido. Viene desmarcada; si la querés, marcala a mano.',
     ],
   },
 ];
